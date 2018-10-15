@@ -9,13 +9,35 @@ class ListBooks extends Component {
     readBooks: []
   };
 
-  moveBookToShelf(book, shelf) {
-    //BooksAPI.update(book.id, shelf);
+  moveBookToShelf = (book, shelf) => {
+    var updatedWantToReadBooks = this.state.wantToReadBooks.filter((entry) => entry.id !== book.id);
+    var updatedCurrentlyReadingBooks = this.state.currentlyReadingBooks.filter((entry) => entry.id !== book.id);
+    var updatedReadBooks = this.state.readBooks.filter((entry) => entry.id !== book.id);
+    var updatedBook = book;
+    
+    updatedBook.shelf = shelf;
+    
+    switch(shelf) {
+      case 'wantToRead':
+        updatedWantToReadBooks.push(updatedBook);
+        break;
+      case 'currentlyReading':
+        updatedCurrentlyReadingBooks.push(updatedBook);
+        break;
+      case 'read':
+        updatedReadBooks.push(updatedBook);
+        break;
+      default:
+        break;
+    }
+    
     this.setState((prevState) => ({
-      wantToReadBooks: prevState.filter((entry) => entry.id !== book.id).push((shelf === 'wantToRead') ? book : null),
-      currentReadingBooks: prevState.filter((entry) => entry.id !== book.id).push((shelf === 'currentlyReading') ? book : null),
-      readBooks: prevState.filter((entry) => entry.id !== book.id).push((shelf === 'read') ? book : null)
+      wantToReadBooks: updatedWantToReadBooks,
+      currentlyReadingBooks: updatedCurrentlyReadingBooks,
+      readBooks: updatedReadBooks
     }));
+    
+    BooksAPI.update(book, shelf);
   };
 
   componentDidMount(){
