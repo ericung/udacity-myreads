@@ -4,7 +4,8 @@ import BookShelfChanger from './BookShelfChanger'
 
 class Book extends Component {
   render() {
-    const authorLength = this.props.itemDetail.authors.length;
+    const authorLength = (this.props.itemDetail.authors !== undefined) ? this.props.itemDetail.authors.length : 0;
+    const authors = (this.props.itemDetail.authors !== undefined) ? this.props.itemDetail.authors : [];
     const bgImage = (this.props.itemDetail.imageLinks.thumbnail !== undefined) ? 'url(' + this.props.itemDetail.imageLinks.thumbnail +')' : '';
     return (
       <div className="book">
@@ -14,7 +15,7 @@ class Book extends Component {
         </div>
         <div className="book-title">{this.props.itemDetail.title}</div>
         <div className="book-authors">
-          {this.props.itemDetail.authors.map(function(element, index){
+          {authors.map(function(element, index){
             if(authorLength === (index + 1)){
                 return element;
               } else {

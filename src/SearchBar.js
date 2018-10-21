@@ -7,13 +7,29 @@ class SearchBar extends Component {
     books: []
   };
 
+  moveBookToShelf = (book, shelf) => {    
+    BooksAPI.update(book, shelf);
+  }
+
   getSearchResult = inputText => {
     let self = this;
-    BooksAPI.search(inputText).then(function(results) {
-      self.setState({
-        books: results
+    if (inputText !== "") {
+      BooksAPI.search(inputText).then(function(results) {
+        if (results.error !== undefined) {
+          self.setState({
+            books: []
+          });
+        } else {
+          self.setState({
+            books: results
+          });
+        } 
       });
-    });
+    } else {
+      this.setState({
+        books: []
+      });
+    }
   }
 
   render() {
@@ -35,7 +51,7 @@ class SearchBar extends Component {
               </div>
             </div>
             <div className="search-books-results">
-              <BookShelf bookCollection={this.state.books}/>
+              <BookShelf bookCollection={this.state.books} moveBook={this.moveBookToShelf}/>
             </div>
           </div>
       )
