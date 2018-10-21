@@ -1,0 +1,11 @@
+React Component Hierarchy
+
+App.js
+- ListBook.js
+-- BookShelf.js
+--- Book.js
+---- BookShelfChanger.js
+- SearchBar.js
+-- BookShelf.js
+--- Book.js
+---- BookShelfChanger.js

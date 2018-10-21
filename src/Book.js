@@ -1,19 +1,19 @@
-import React, { Component } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import BookShelfChanger from './BookShelfChanger'
 
 
-class Book extends Component {
-  render() {
-    const authorLength = (this.props.itemDetail.authors !== undefined) ? this.props.itemDetail.authors.length : 0;
-    const authors = (this.props.itemDetail.authors !== undefined) ? this.props.itemDetail.authors : [];
-    const bgImage = (this.props.itemDetail.imageLinks.thumbnail !== undefined) ? 'url(' + this.props.itemDetail.imageLinks.thumbnail +')' : '';
+const Book = (props) => {
+    const authorLength = (props.itemDetail.authors !== undefined) ? props.itemDetail.authors.length : 0;
+    const authors = (props.itemDetail.authors !== undefined) ? props.itemDetail.authors : [];
+    const bgImage = (props.itemDetail.imageLinks.thumbnail !== undefined) ? 'url(' + props.itemDetail.imageLinks.thumbnail +')' : '';
     return (
       <div className="book">
         <div className="book-top">
           <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: bgImage }}></div>
-          <BookShelfChanger item={this.props.itemDetail} moveBook={this.props.moveBook} />
+          <BookShelfChanger item={props.itemDetail} moveBook={props.moveBook} />
         </div>
-        <div className="book-title">{this.props.itemDetail.title}</div>
+        <div className="book-title">{props.itemDetail.title}</div>
         <div className="book-authors">
           {authors.map(function(element, index){
             if(authorLength === (index + 1)){
@@ -26,7 +26,11 @@ class Book extends Component {
       </div>
     </div>
     )
-  }
-}
+};
 
-export default Book
+Book.propTypes = {
+  itemDetail: PropTypes.object.isRequired,
+  moveBook: PropTypes.func.isRequired
+};
+
+export default Book;

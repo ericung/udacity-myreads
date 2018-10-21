@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import Book from './Book'
 
-class BookShelf extends Component {
-  render() {
-    const moveBook = this.props.moveBook;
-    const bookCollection = (this.props.bookCollection !== undefined) ? this.props.bookCollection : [];
+const BookShelf = (props) => {
+    const moveBook = props.moveBook;
+    const bookCollection = (props.bookCollection !== undefined) ? props.bookCollection : [];
     return (
       <div className="bookshelf-books">
       <ol className="books-grid">
@@ -20,7 +20,11 @@ class BookShelf extends Component {
       </ol>
     </div>
     )
-  }
-}
+};
 
-export default BookShelf
+BookShelf.propTypes = {
+  bookCollection: PropTypes.array.isRequired,
+  moveBook: PropTypes.func.isRequired
+};
+
+export default BookShelf;

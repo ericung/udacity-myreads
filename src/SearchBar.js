@@ -1,15 +1,28 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import BookShelf from './BookShelf'
 
 class SearchBar extends Component {
   state = {
-    books: []
+    books: [],
+    bookInShelf: {}
   };
 
   moveBookToShelf = (book, shelf) => {    
+    let self = this;
+    
     BooksAPI.update(book, shelf);
-  }
+    BooksAPI.getAll().then(function(results){
+      var bookHash = {};
+      results.forEach(function(element) {
+        bookHash[element.id] = element;
+      });
+      self.setState(() => ({
+        booksInShelf: bookHash
+      }));
+    });
+  };
 
   getSearchResult = inputText => {
     let self = this;
@@ -20,8 +33,15 @@ class SearchBar extends Component {
             books: []
           });
         } else {
+          var bookList = [];
+          results.forEach(function(element){
+            if(self.state.booksInShelf[element.id] !== undefined) {
+              element.shelf = self.state.booksInShelf[element.id].shelf;
+            }
+            bookList.push(element);
+          });
           self.setState({
-            books: results
+            books: bookList
           });
         } 
       });
@@ -30,24 +50,28 @@ class SearchBar extends Component {
         books: []
       });
     }
-  }
+  };
+
+  componentDidMount() {
+    let self = this;
+    BooksAPI.getAll().then(function(results){
+      var bookHash = {};
+      results.forEach(function(element) {
+        bookHash[element.id] = element;
+      });
+      self.setState(() => ({
+        booksInShelf: bookHash
+      }));
+    });
+  };
 
   render() {
     return (
           <div className="search-books">
             <div className="search-books-bar">
-              <a className="close-search" onClick={this.props.closeSearch}>Close</a>
+              <Link to='/' className="close-search">Close</Link>
               <div className="search-books-input-wrapper">
-                {/*
-                  NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                  You can find these search terms here:
-                  https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-                  However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                  you don't find a specific author or title. Every search is limited by search terms.
-                */}
                 <input type="text" placeholder="Search by title or author" onChange={event => this.getSearchResult(event.target.value)}/>
-
               </div>
             </div>
             <div className="search-books-results">
@@ -55,7 +79,7 @@ class SearchBar extends Component {
             </div>
           </div>
       )
-  }
-}
+  };
+};
 
-export default SearchBar
+export default SearchBar;
