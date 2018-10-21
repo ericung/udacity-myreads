@@ -6,6 +6,7 @@ import BookShelfChanger from './BookShelfChanger'
 const Book = (props) => {
     const authorLength = (props.itemDetail.authors !== undefined) ? props.itemDetail.authors.length : 0;
     const authors = (props.itemDetail.authors !== undefined) ? props.itemDetail.authors : [];
+    // console.log(props.itemDetail.imageLinks + "\tfrom\t" + props.itemDetail);
     const bgImage = (props.itemDetail.imageLinks.thumbnail !== undefined) ? 'url(' + props.itemDetail.imageLinks.thumbnail +')' : '';
     return (
       <div className="book">

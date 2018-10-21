@@ -4,12 +4,11 @@ import Book from './Book'
 
 const BookShelf = (props) => {
     const moveBook = props.moveBook;
-    const bookCollection = (props.bookCollection !== undefined) ? props.bookCollection : [];
     return (
       <div className="bookshelf-books">
       <ol className="books-grid">
       {
-        bookCollection.map(function(element) {
+        props.bookCollection.map(function(element) {
           return(
             <li key={element.id}>
               <Book itemDetail={element} moveBook={moveBook} />

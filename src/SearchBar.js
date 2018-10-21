@@ -4,13 +4,22 @@ import * as BooksAPI from './BooksAPI'
 import BookShelf from './BookShelf'
 
 class SearchBar extends Component {
+  // Two variables to keep track of: books being searched and dictionary of books.
   state = {
     books: [],
     bookInShelf: {}
   };
 
+  // Two calls to the bookAPI; the first is the update then the second is getAll second to update state.
   moveBookToShelf = (book, shelf) => {    
     let self = this;
+    var bookList = this.state.books;
+    
+    bookList.forEach(function(element) {
+      if (element.id === book.id) {
+        element.shelf = shelf;
+      }
+    });
     
     BooksAPI.update(book, shelf);
     BooksAPI.getAll().then(function(results){
@@ -19,6 +28,7 @@ class SearchBar extends Component {
         bookHash[element.id] = element;
       });
       self.setState(() => ({
+        books: bookList,
         booksInShelf: bookHash
       }));
     });

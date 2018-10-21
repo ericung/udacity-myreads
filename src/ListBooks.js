@@ -10,6 +10,7 @@ class ListBooks extends Component {
     readBooks: []
   };
 
+  // updates shelf visually and uses api to update it, no need to fetch from database
   moveBookToShelf = (book, shelf) => {
     var updatedWantToReadBooks = this.state.wantToReadBooks.filter((entry) => entry.id !== book.id);
     var updatedCurrentlyReadingBooks = this.state.currentlyReadingBooks.filter((entry) => entry.id !== book.id);
