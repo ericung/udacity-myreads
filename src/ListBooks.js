@@ -10,7 +10,7 @@ class ListBooks extends Component {
     readBooks: []
   };
 
-  // updates shelf visually and uses api to update it, no need to fetch from database
+  // Updates shelf visually via React and uses API to update it. No need to fetch from database.
   moveBookToShelf = (book, shelf) => {
     var updatedWantToReadBooks = this.state.wantToReadBooks.filter((entry) => entry.id !== book.id);
     var updatedCurrentlyReadingBooks = this.state.currentlyReadingBooks.filter((entry) => entry.id !== book.id);
@@ -42,6 +42,7 @@ class ListBooks extends Component {
     BooksAPI.update(book, shelf);
   };
 
+  // Set up the main page with call to API.
   componentDidMount(){
     let self = this;
     BooksAPI.getAll().then(function(results){
