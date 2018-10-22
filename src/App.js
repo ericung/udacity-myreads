@@ -6,12 +6,26 @@ import SearchBar from './SearchBar'
 import ListBooks from './ListBooks'
 
 class BooksApp extends Component {
+  constructor(props){
+    super(props);
+    let self = this;
+    BooksAPI.getAll().then(function(results){
+      var bookHash = {};
+      results.forEach(function(element) {
+        bookHash[element.id] = { shelf: element.shelf };
+      });
+      self.setState(() => ({
+        books: results,
+        bookHash: bookHash
+      }));
+    });
+  };
   state = {
     books: [],
     bookHash: {}
   };
 
-  componentDidMount() {
+  componentWillMount() {
     let self = this;
     BooksAPI.getAll().then(function(results){
       var bookHash = {};
@@ -26,10 +40,12 @@ class BooksApp extends Component {
   };
 
   render() {
+    const books = this.state.books;
+    const bookHash = this.state.bookHash;
     return (
       <div className="app">
-        <Route exact path='/' render={() => <ListBooks books={this.state.books} />} />
-        <Route exact path='/search' render={() => <SearchBar booksInShelf={this.state.bookHash} />} />
+        <Route exact path='/' component={(props) => <ListBooks books={books} {...props} />} />
+        <Route exact path='/search' component={(props) => <SearchBar booksInShelf={bookHash} {...props} />} />
       </div>
     )
   };
