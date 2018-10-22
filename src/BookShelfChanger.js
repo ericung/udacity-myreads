@@ -7,6 +7,7 @@ class BookShelfChanger extends Component {
   };
   
   render() {
+    // Get the shelf value of the item otherwise set to none.
     const shelfStatus = (this.props.item.shelf !== undefined) ? this.props.item.shelf : "none";
     return (
       <div className="book-shelf-changer">

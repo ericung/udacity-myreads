@@ -7,7 +7,9 @@ import BookShelf from './BookShelf'
 class SearchBar extends Component {
   // Two variables to keep track of: books being searched and dictionary of books.
   state = {
+    // Search bar items.
     books: [],
+    // Books in the shelf.
     booksInShelf: {}
   };
 
@@ -64,9 +66,11 @@ class SearchBar extends Component {
           // If results are returned, iterate and add the property, shelf, from the books in user's shelves to the entries.
           var bookList = [];
           results.forEach(function(element){
+            // Do some initial data check.
             var authors = (element.authors !== undefined) ? element.authors : [];
             var bgImage = (element.imageLinks.thumbnail !== undefined) ? 'url(' + element.imageLinks.thumbnail +')' : '';
             
+            // Check if book is already in collection and add shelf property if it is.
             if(self.state.booksInShelf[element.id] !== undefined) {
               element.shelf = self.state.booksInShelf[element.id].shelf;
             }
@@ -92,9 +96,16 @@ class SearchBar extends Component {
   };
 
   componentDidMount() {
+    var bookHash = {};
+
+    // Create a hash table of the books in the shelf.
+    this.props.books.forEach(function(element) {
+      bookHash[element.id] = element;
+    });
+
     this.setState({
       books: [],
-      booksInShelf: this.props.booksInShelf
+      booksInShelf: bookHash
     });
   };
 
@@ -116,7 +127,7 @@ class SearchBar extends Component {
 };
 
 SearchBar.propTypes = {
-  booksInShelf: PropTypes.object.isRequired
+  books: PropTypes.array.isRequired
 }
 
 export default SearchBar;

@@ -7,37 +7,20 @@ import ListBooks from './ListBooks'
 
 class BooksApp extends Component {
   state = {
-    books: [],
-    bookHash: {}
+    books: []
   };
 
   updateBooks = (book, shelf) => {
     var updatedBooks = this.state.books;
-    var updatedBookHash = this.state.bookHash;
     
     updatedBooks.forEach(function(element) {
       if (element.id === book.id) {
         element.shelf = shelf;
       }
     });
-    
-    // Handle the books in collection.
-    if(shelf === "none") {
-      // Remove book from hash table.
-      updatedBookHash[book.id] = undefined;
-    } else {
-      // Add book to hash table if it doesn't already exist.
-      if (updatedBookHash[book.id] === undefined) {
-        updatedBookHash[book.id] = book;
-      } 
-      
-      // update book in collection to shelf
-      updatedBookHash[book.id].shelf = shelf;
-    }
 
     this.setState(() => ({
-      books: updatedBooks,
-      bookHash: updatedBookHash
+      books: updatedBooks
     }));
 
     // Update the book on the database side.
@@ -53,8 +36,7 @@ class BooksApp extends Component {
     });
 
     this.setState(() => ({
-      books: updatedBooks,
-      bookHash: updatedBookHash
+      books: updatedBooks
     }));
   };
 
@@ -62,9 +44,9 @@ class BooksApp extends Component {
     let self = this;
     BooksAPI.getAll().then(function(results){
       var bookList = [];
-      var bookHash = {};
 
       results.forEach(function(element) {
+        // Do some initial data check.
         var authors = (element.authors !== undefined) ? element.authors : [];
         var bgImage = (element.imageLinks.thumbnail !== undefined) ? 'url(' + element.imageLinks.thumbnail +')' : '';
         
@@ -75,18 +57,10 @@ class BooksApp extends Component {
           shelf: element.shelf,
           title: element.title
         });
-        
-        bookHash[element.id] = { authors: authors,
-          bgImage: bgImage,
-          id: element.id,
-          shelf: element.shelf,
-          title: element.title
-        };
       });
       
       self.setState(() => ({
-        books: bookList,
-        bookHash: bookHash
+        books: bookList
       }));
     });
   };
@@ -95,7 +69,7 @@ class BooksApp extends Component {
     return (
       <div className="app">
         <Route exact path='/' component={(props) => <ListBooks books={this.state.books} updateBooks={this.updateBooks} {...props} />} />
-        <Route exact path='/search' component={(props) => <SearchBar booksInShelf={this.state.bookHash} updateBooks={this.updateBooks} backButton={this.backFromSearch} {...props} />} />
+        <Route exact path='/search' component={(props) => <SearchBar books={this.state.books} updateBooks={this.updateBooks} backButton={this.backFromSearch} {...props} />} />
       </div>
     )
   };
