@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import * as BooksAPI from './BooksAPI'
 import BookShelf from './BookShelf'
 
 class ListBooks extends Component {
   state = {
-    wantToReadBooks: [],
-    currentlyReadingBooks: [],
-    readBooks: []
+    wantToReadBooks: this.props.books.filter(entry => entry.shelf === 'wantToRead'),
+    currentlyReadingBooks: this.props.books.filter(entry => entry.shelf === 'currentlyReading'),
+    readBooks: this.props.books.filter(entry => entry.shelf === 'read')
   };
 
   // Updates shelf visually via React and uses API to update it. No need to fetch from database.
@@ -42,18 +43,6 @@ class ListBooks extends Component {
     BooksAPI.update(book, shelf);
   };
 
-  // Set up the main page with call to API.
-  componentDidMount(){
-    let self = this;
-    BooksAPI.getAll().then(function(results){
-      self.setState(() => ({
-        wantToReadBooks: results.filter(entry => entry.shelf === 'wantToRead'),
-        currentlyReadingBooks: results.filter(entry => entry.shelf === 'currentlyReading'),
-        readBooks: results.filter(entry => entry.shelf === 'read')
-      }));
-    });
-  };
-
   render() {
     return(
           <div className="list-books">
@@ -83,5 +72,9 @@ class ListBooks extends Component {
     )
   };
 };
+
+ListBooks.propTypes = {
+  books: PropTypes.array.isRequired
+}
 
 export default ListBooks;

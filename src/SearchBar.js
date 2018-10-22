@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import * as BooksAPI from './BooksAPI'
 import BookShelf from './BookShelf'
 
@@ -7,14 +8,14 @@ class SearchBar extends Component {
   // Two variables to keep track of: books being searched and dictionary of books.
   state = {
     books: [],
-    bookInShelf: {}
+    booksInShelf: this.props.booksInShelf
   };
 
   // Update the state of the searchbar component and update it via a call to the API.
   moveBookToShelf = (book, shelf) => {    
     let self = this;
     var bookList = this.state.books;
-    var bookHash = this.state.bookInShelf;
+    var bookHash = this.state.booksInShelf;
     
     // Handle the book from the search.
     bookList.forEach(function(element) {
@@ -64,6 +65,7 @@ class SearchBar extends Component {
           var bookList = [];
           results.forEach(function(element){
             if(self.state.booksInShelf[element.id] !== undefined) {
+              
               element.shelf = self.state.booksInShelf[element.id].shelf;
             }
             bookList.push(element);
@@ -78,20 +80,6 @@ class SearchBar extends Component {
         books: []
       });
     }
-  };
-
-  // Set up the state of the searchbar.
-  componentDidMount() {
-    let self = this;
-    BooksAPI.getAll().then(function(results){
-      var bookHash = {};
-      results.forEach(function(element) {
-        bookHash[element.id] = element;
-      });
-      self.setState(() => ({
-        booksInShelf: bookHash
-      }));
-    });
   };
 
   render() {
@@ -110,5 +98,9 @@ class SearchBar extends Component {
       )
   };
 };
+
+SearchBar.propTypes = {
+  booksInShelf: PropTypes.object.isRequired
+}
 
 export default SearchBar;
