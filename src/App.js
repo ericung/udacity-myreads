@@ -68,8 +68,8 @@ class BooksApp extends Component {
   render() {
     return (
       <div className="app">
-        <Route exact path='/' component={(props) => <ListBooks books={this.state.books} updateBooks={this.updateBooks} {...props} />} />
-        <Route exact path='/search' component={(props) => <SearchBar books={this.state.books} updateBooks={this.updateBooks} backButton={this.backFromSearch} {...props} />} />
+        <Route exact path='/' component={() => <ListBooks books={this.state.books} updateBooks={this.updateBooks} />} />
+        <Route exact path='/search' component={() => <SearchBar books={this.state.books} updateBooks={this.updateBooks} backButton={this.backFromSearch} />} />
       </div>
     )
   };

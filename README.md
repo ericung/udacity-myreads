@@ -11,11 +11,16 @@ To get started developing right away:
 * install all project dependencies with `npm install`
 * start the development server with `npm start`
 
-## Github source
+## Github Source
 
 The project can be found in:
 
 [MyReads](https://github.com/pietore/udacity-myreads)
+
+## Other Sources
+
+[React Router DOM document](https://reacttraining.com/react-router/web/api/Route/component)
+[Route Component Render](https://stackoverflow.com/questions/48147045/passing-props-to-router-component-in-react-router-v4)
 
 ## Important
 The backend API uses a fixed set of cached search results and is limited to a particular set of search terms, which can be found in [SEARCH_TERMS.md](SEARCH_TERMS.md). That list of terms are the _only_ terms that will work with the backend, so don't be surprised if your searches for Basket Weaving or Bubble Wrap don't come back with any results.
