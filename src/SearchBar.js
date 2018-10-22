@@ -8,7 +8,7 @@ class SearchBar extends Component {
   // Two variables to keep track of: books being searched and dictionary of books.
   state = {
     books: [],
-    booksInShelf: this.props.booksInShelf
+    booksInShelf: {}
   };
 
   // Update the state of the searchbar component and update it via a call to the API.
@@ -64,11 +64,20 @@ class SearchBar extends Component {
           // If results are returned, iterate and add the property, shelf, from the books in user's shelves to the entries.
           var bookList = [];
           results.forEach(function(element){
+            var authors = (element.authors !== undefined) ? element.authors : [];
+            var bgImage = (element.imageLinks.thumbnail !== undefined) ? 'url(' + element.imageLinks.thumbnail +')' : '';
+            
             if(self.state.booksInShelf[element.id] !== undefined) {
-              
               element.shelf = self.state.booksInShelf[element.id].shelf;
             }
-            bookList.push(element);
+        
+            bookList.push({
+              authors: authors,
+              bgImage: bgImage,
+              id: element.id,
+              shelf: element.shelf,
+              title: element.title
+            });
           });
           self.setState({
             books: bookList
@@ -82,17 +91,24 @@ class SearchBar extends Component {
     }
   };
 
+  componentDidMount() {
+    this.setState({
+      books: [],
+      booksInShelf: this.props.booksInShelf
+    });
+  };
+
   render() {
     return (
           <div className="search-books">
             <div className="search-books-bar">
-              <Link to='/' className="close-search">Close</Link>
+              <Link to='/' className="close-search" onClick={() => this.props.backFromSearch(this.state.booksInShelf)}>Close</Link>
               <div className="search-books-input-wrapper">
                 <input type="text" placeholder="Search by title or author" onChange={event => this.getSearchResult(event.target.value)}/>
               </div>
             </div>
             <div className="search-books-results">
-              <BookShelf bookCollection={this.state.books} moveBook={this.moveBookToShelf}/>
+              <BookShelf bookCollection={this.state.books} updateBooks={this.moveBookToShelf}/>
             </div>
           </div>
       )

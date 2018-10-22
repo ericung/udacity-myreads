@@ -1,46 +1,52 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import * as BooksAPI from './BooksAPI'
 import BookShelf from './BookShelf'
 
 class ListBooks extends Component {
   state = {
-    wantToReadBooks: this.props.books.filter(entry => entry.shelf === 'wantToRead'),
-    currentlyReadingBooks: this.props.books.filter(entry => entry.shelf === 'currentlyReading'),
-    readBooks: this.props.books.filter(entry => entry.shelf === 'read')
+    wantToReadBooks: [],
+    currentlyReadingBooks: [],
+    readBooks: []
   };
 
   // Updates shelf visually via React and uses API to update it. No need to fetch from database.
   moveBookToShelf = (book, shelf) => {
-    var updatedWantToReadBooks = this.state.wantToReadBooks.filter((entry) => entry.id !== book.id);
-    var updatedCurrentlyReadingBooks = this.state.currentlyReadingBooks.filter((entry) => entry.id !== book.id);
-    var updatedReadBooks = this.state.readBooks.filter((entry) => entry.id !== book.id);
-    var updatedBook = book;
+    var updatedWantToReadBooks = this.state.wantToReadBooks;
+    var updatedCurrentlyReadingBooks = this.state.currentlyReadingBooks;
+    var updatedReadBooks = this.state.readBooks;
     
-    updatedBook.shelf = shelf;
+    updatedWantToReadBooks.forEach(function(element) {
+      if (element.id === book.id) {
+        element.shelf = shelf;
+      }
+    });
     
-    switch(shelf) {
-      case 'wantToRead':
-        updatedWantToReadBooks.push(updatedBook);
-        break;
-      case 'currentlyReading':
-        updatedCurrentlyReadingBooks.push(updatedBook);
-        break;
-      case 'read':
-        updatedReadBooks.push(updatedBook);
-        break;
-      default:
-        break;
-    }
+    updatedCurrentlyReadingBooks.forEach(function(element) {
+      if (element.id === book.id) {
+        element.shelf = shelf;
+      }
+    });
+    
+    updatedReadBooks.forEach(function(element) {
+      if (element.id === book.id) {
+        element.shelf = shelf;
+      }
+    });
     
     this.setState((prevState) => ({
       wantToReadBooks: updatedWantToReadBooks,
       currentlyReadingBooks: updatedCurrentlyReadingBooks,
       readBooks: updatedReadBooks
     }));
-    
-    BooksAPI.update(book, shelf);
+  };
+
+  componentDidMount() {
+    this.setState({
+      wantToReadBooks: this.props.books.filter(entry => entry.shelf === 'wantToRead'),
+      currentlyReadingBooks: this.props.books.filter(entry => entry.shelf === 'currentlyReading'),
+      readBooks: this.props.books.filter(entry => entry.shelf === 'read')
+    });
   };
 
   render() {
@@ -53,15 +59,15 @@ class ListBooks extends Component {
               <div>
                 <div className="bookshelf">
                   <h2 className="bookshelf-title">Currently Reading</h2>
-                  <BookShelf bookCollection={this.state.currentlyReadingBooks} moveBook={this.moveBookToShelf} />
+                  <BookShelf bookCollection={this.state.currentlyReadingBooks} moveBook={this.moveBookToShelf} updateBooks={this.props.updateBooks} />
                 </div>
                 <div className="bookshelf">
                   <h2 className="bookshelf-title">Want to Read</h2>
-                  <BookShelf bookCollection={this.state.wantToReadBooks} moveBook={this.moveBookToShelf} />
+                  <BookShelf bookCollection={this.state.wantToReadBooks} moveBook={this.moveBookToShelf} updateBooks={this.props.updateBooks} />
                 </div>
                 <div className="bookshelf">
                   <h2 className="bookshelf-title">Read</h2>
-                  <BookShelf bookCollection={this.state.readBooks} moveBook={this.moveBookToShelf} />
+                  <BookShelf bookCollection={this.state.readBooks} moveBook={this.moveBookToShelf} updateBooks={this.props.updateBooks} />
                 </div>
               </div>
             </div>
@@ -74,7 +80,8 @@ class ListBooks extends Component {
 };
 
 ListBooks.propTypes = {
-  books: PropTypes.array.isRequired
+  books: PropTypes.array.isRequired,
+  updateBooks: PropTypes.func.isRequired
 }
 
 export default ListBooks;
