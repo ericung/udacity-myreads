@@ -113,7 +113,7 @@ class SearchBar extends Component {
     return (
           <div className="search-books">
             <div className="search-books-bar">
-              <Link to='/' className="close-search" onClick={() => this.props.backFromSearch(this.state.booksInShelf)}>Close</Link>
+              <Link to='/' className="close-search" onClick={() => this.props.backButton(this.state.booksInShelf)}>Close</Link>
               <div className="search-books-input-wrapper">
                 <input type="text" placeholder="Search by title or author" onChange={event => this.getSearchResult(event.target.value)}/>
               </div>
@@ -127,7 +127,8 @@ class SearchBar extends Component {
 };
 
 SearchBar.propTypes = {
-  books: PropTypes.array.isRequired
+  books: PropTypes.array.isRequired,
+  backButton: PropTypes.func.isRequired
 }
 
 export default SearchBar;

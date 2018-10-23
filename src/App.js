@@ -27,12 +27,11 @@ class BooksApp extends Component {
     BooksAPI.update(book, shelf);
   };
 
-  backFromSearch(books) {
-    var updatedBookHash = books;
+  backFromSearch = (books) => {
     var updatedBooks = [];
     
-    updatedBookHash.forEach(function(element){
-      updatedBooks.push(element);
+    Object.keys(books).forEach(function(element){
+      updatedBooks.push(books[element]);
     });
 
     this.setState(() => ({
